@@ -79,6 +79,28 @@ class Player {
     }
 }
 
+class bullet {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.direction = 90;
+        this.speed = 10;
+        this.limit = 200; //kiedys dodam wybor broni i zamieni sie to na range
+    }
+
+    draw() {
+        ctx.rect(this.x, this.y, 100, 100);
+        ctx.fillStyle = 'black';
+    }
+
+    update() {
+        this.x += this.speed
+
+        if (this.x >= this.limit) {
+            this.draw()
+        }
+    }
+}
 function startMenu() {
     ctx.fillStyle = 'green'
     ctx.fillRect(0, 0, 1200, 800)
@@ -103,6 +125,10 @@ function gameLoop() {
         player.move();
         player.draw(ctx);
     }
+
+    bullets.forEach(element => {
+        element.update();
+    });
     requestAnimationFrame(gameLoop);
 }
 
@@ -122,4 +148,13 @@ window.addEventListener("keydown", (e) => {
 
 window.addEventListener("keyup", (e) => {
     keysPressed[e.key] = false;
+});
+
+let bullets = [];
+
+window.addEventListener("keypress", (e) => {
+    if (e.key === 'q') {
+        bullets.push(new bullet(10, 10));
+        console.log(bullets);
+    }
 });
