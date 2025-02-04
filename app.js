@@ -48,6 +48,8 @@ class button {
     }
 }
 
+let keysPressed = [];
+
 class Player {
     constructor(x, y, img) {
         this.x = x
@@ -60,21 +62,19 @@ class Player {
         ctx.drawImage(this.image, this.x, this.y, 200, 200);
     }
 
-    move(direction) {
+    move() {
         const speed = 5;
-        switch (direction) {
-            case 'w':
-                this.y -= speed;
-                break;
-            case 's':
-                this.y += speed;
-                break;
-            case 'a':
-                this.x -= speed;
-                break;
-            case 'd':
-                this.x += speed;
-                break;
+        if (keysPressed['w']) {
+            this.y -= speed;
+        }
+        if (keysPressed['s']) {
+            this.y += speed;
+        }
+        if (keysPressed['a']) {
+            this.x -= speed;
+        }
+        if (keysPressed['d']) {
+            this.x += speed;
         }
     }
 }
@@ -100,6 +100,7 @@ function gameLoop() {
     ctx.fillStyle = 'green';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     if (player) {
+        player.move();
         player.draw(ctx);
     }
     requestAnimationFrame(gameLoop);
@@ -108,6 +109,8 @@ function gameLoop() {
 startMenu();
 
 window.addEventListener("keydown", (e) => {
+    keysPressed[e.key] = true;
+
     if (e.key === 'd') {
         player.image.src = 'PlayerFaceRight.png';
     }
@@ -115,8 +118,8 @@ window.addEventListener("keydown", (e) => {
     if (e.key === 'a') {
         player.image.src = 'PlayerFaceLeft.png';
     }
+});
 
-    if (player) {
-        player.move(e.key);
-    }
+window.addEventListener("keyup", (e) => {
+    keysPressed[e.key] = false;
 });
