@@ -4,6 +4,13 @@ canvas.height = 800
 
 let ctx = canvas.getContext('2d')
 
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getRandomIntInclusive(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+}
+
 //niedokonca wiem co sie tu dzieje ale buja
 class button {
     constructor(x, y, width, height, color, text) {
@@ -41,6 +48,37 @@ class button {
     }
 }
 
+class Player {
+    constructor(x, y, img) {
+        this.x = x
+        this.y = y
+        this.image = new Image();
+        this.image.src = img;
+    }
+
+    draw(ctx) {
+        ctx.drawImage(this.image, this.x, this.y, 200, 200);
+    }
+
+    move(direction) {
+        const speed = 5;
+        switch (direction) {
+            case 'w':
+                this.y -= speed;
+                break;
+            case 's':
+                this.y += speed;
+                break;
+            case 'a':
+                this.x -= speed;
+                break;
+            case 'd':
+                this.x += speed;
+                break;
+        }
+    }
+}
+
 function startMenu() {
     ctx.fillStyle = 'green'
     ctx.fillRect(0, 0, 1200, 800)
@@ -52,8 +90,33 @@ function startMenu() {
     startButton.draw();
 
     startButton.addClickListener(() => {
-        console.log('123');
+        player = new Player(400, 200, 'PlayerFaceLeft.png');
+        gameLoop();
     });
 }
 
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (player) {
+        player.draw(ctx);
+    }
+    requestAnimationFrame(gameLoop);
+}
+
 startMenu();
+
+window.addEventListener("keydown", (e) => {
+    if (e.key === 'd') {
+        player.image.src = 'PlayerFaceRight.png';
+    }
+
+    if (e.key === 'a') {
+        player.image.src = 'PlayerFaceLeft.png';
+    }
+
+    if (player) {
+        player.move(e.key);
+    }
+});
