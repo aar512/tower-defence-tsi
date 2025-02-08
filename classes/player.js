@@ -9,7 +9,7 @@ export default class Player {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.image, this.x, this.y, 200, 200);
+        ctx.drawImage(this.image, this.x, this.y,);
     }
 
     move() {

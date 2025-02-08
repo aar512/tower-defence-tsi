@@ -1,6 +1,7 @@
 import { ctx, canvas } from '../app.js'
 
 export default class Button {
+
     constructor(x, y, width, height, color, text) {
         this.x = x
         this.y = y

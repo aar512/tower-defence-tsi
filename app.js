@@ -1,7 +1,7 @@
 import Player from './classes/player.js';
 import Button from './classes/button.js';
-export { keysPressed, ctx, canvas };
-
+import Enemy from './enemy.js';
+export { keysPressed, ctx, canvas, player };
 
 let player;
 let button;
@@ -9,17 +9,10 @@ let button;
 let keysPressed = [];
 
 let canvas = document.getElementById("game")
-canvas.width = 1200
-canvas.height = 800
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 let ctx = canvas.getContext('2d')
-
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-function getRandomIntInclusive(min, max) {
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
-}
 
 class bullet {
     constructor(x, y) {
@@ -45,16 +38,16 @@ class bullet {
 }
 function startMenu() {
     ctx.fillStyle = 'green'
-    ctx.fillRect(0, 0, 1200, 800)
+    ctx.fillRect(0, 0, 2000, 2000)
 
     let buttonWidth = 500;
     let buttonHeight = 50;
-    let startButton = new Button((canvas.width - buttonWidth) / 2, 250, buttonWidth, buttonHeight, 'gray', 'Start Game');
+    let startButton = new Button((canvas.width - buttonWidth) / 2, (canvas.height - buttonHeight) / 2, buttonWidth, buttonHeight, 'gray', 'Start Game');
 
     startButton.draw();
 
     startButton.addClickListener(() => {
-        player = new Player(400, 200, 'PlayerFaceLeft.png');
+        player = new Player(canvas.width / 2, canvas.height / 2, 'PlayerFaceLeft.png');
         gameLoop();
     });
 }
