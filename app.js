@@ -1,3 +1,13 @@
+import Player from './classes/player.js';
+import Button from './classes/button.js';
+export { keysPressed, ctx, canvas };
+
+
+let player;
+let button;
+
+let keysPressed = [];
+
 let canvas = document.getElementById("game")
 canvas.width = 1200
 canvas.height = 800
@@ -9,74 +19,6 @@ function getRandomIntInclusive(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
-}
-
-//niedokonca wiem co sie tu dzieje ale buja
-class button {
-    constructor(x, y, width, height, color, text) {
-        this.x = x
-        this.y = y
-        this.width = width
-        this.height = height
-        this.color = color
-        this.text = text
-    }
-
-    draw() {
-        //wyglad
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        //ramka
-        ctx.strokeRect(this.x, this.y, this.width, this.height)
-        //napis
-        ctx.fillStyle = 'black'
-        ctx.textAlign = 'center'
-        ctx.font = '20px Arial'
-        ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2 + 5)
-    }
-
-    addClickListener(callback) {
-        addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            if (x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height) {
-                callback();
-            }
-        });
-    }
-}
-
-let keysPressed = [];
-
-class Player {
-    constructor(x, y, img) {
-        this.x = x
-        this.y = y
-        this.image = new Image();
-        this.image.src = img;
-    }
-
-    draw(ctx) {
-        ctx.drawImage(this.image, this.x, this.y, 200, 200);
-    }
-
-    move() {
-        const speed = 5;
-        if (keysPressed['w']) {
-            this.y -= speed;
-        }
-        if (keysPressed['s']) {
-            this.y += speed;
-        }
-        if (keysPressed['a']) {
-            this.x -= speed;
-        }
-        if (keysPressed['d']) {
-            this.x += speed;
-        }
-    }
 }
 
 class bullet {
@@ -107,7 +49,7 @@ function startMenu() {
 
     let buttonWidth = 500;
     let buttonHeight = 50;
-    let startButton = new button((canvas.width - buttonWidth) / 2, 250, buttonWidth, buttonHeight, 'gray', 'Start Game');
+    let startButton = new Button((canvas.width - buttonWidth) / 2, 250, buttonWidth, buttonHeight, 'gray', 'Start Game');
 
     startButton.draw();
 
@@ -126,9 +68,6 @@ function gameLoop() {
         player.draw(ctx);
     }
 
-    bullets.forEach(element => {
-        element.update();
-    });
     requestAnimationFrame(gameLoop);
 }
 
