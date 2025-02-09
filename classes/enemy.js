@@ -1,4 +1,4 @@
-import { player } from './app.js';
+import { player } from '../app.js';
 
 export default class Enemy {
     constructor(x, y, speed) {

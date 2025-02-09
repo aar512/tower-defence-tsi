@@ -1,10 +1,12 @@
 import Player from './classes/player.js';
 import Button from './classes/button.js';
-import Enemy from './enemy.js';
+import Enemy from './classes/enemy.js';
+import Bullet from './classes/bullet.js';
 export { keysPressed, ctx, canvas, player };
 
 let player;
 let button;
+let bullet;
 
 let keysPressed = [];
 
@@ -14,28 +16,20 @@ canvas.height = window.innerHeight;
 
 let ctx = canvas.getContext('2d')
 
-class bullet {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.direction = 90;
-        this.speed = 10;
-        this.limit = 200; //kiedys dodam wybor broni i zamieni sie to na range
-    }
+function getMousePositionX(canvas, e) {
+    let rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left;
 
-    draw() {
-        ctx.rect(this.x, this.y, 100, 100);
-        ctx.fillStyle = 'black';
-    }
-
-    update() {
-        this.x += this.speed
-
-        if (this.x >= this.limit) {
-            this.draw()
-        }
-    }
+    return x;
 }
+
+function getMousePositionY(canvas, e) {
+    let rect = canvas.getBoundingClientRect();
+    let y = e.clientY - rect.left;
+
+    return y;
+}
+
 function startMenu() {
     ctx.fillStyle = 'green'
     ctx.fillRect(0, 0, 2000, 2000)
@@ -61,6 +55,12 @@ function gameLoop() {
         player.draw(ctx);
     }
 
+    if (bullets) {
+        bullets.forEach(bullet => {
+            bullet.update();
+        });
+    }
+
     requestAnimationFrame(gameLoop);
 }
 
@@ -84,9 +84,13 @@ window.addEventListener("keyup", (e) => {
 
 let bullets = [];
 
-window.addEventListener("keypress", (e) => {
-    if (e.key === 'q') {
-        bullets.push(new bullet(10, 10));
-        console.log(bullets);
+window.addEventListener("click", (e) => {
+    let bulletX = player.x;
+    if (player.image.src.includes('PlayerFaceRight.png')) {
+        bulletX += 75;
+    } else if (player.image.src.includes('PlayerFaceLeft.png')) {
+        bulletX += 25;
     }
+    bullets.push(new Bullet(bulletX, player.y + 20, getMousePositionX(canvas, e), getMousePositionY(canvas, e), 10, 200));
+    console.log(bullets);
 });
