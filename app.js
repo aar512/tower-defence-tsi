@@ -1,38 +1,33 @@
 import Player from './classes/player.js';
-import Button from './classes/button.js';
+import Button from './classes/oneTimeUseButton.js';
 import Enemy from './classes/enemy.js';
 import Bullet from './classes/bullet.js';
-export { keysPressed, ctx, canvas, player };
+export { keysPressed, ctx, canvas, player, bullets };
 
 let player;
-let button;
-let bullet;
-
 let keysPressed = [];
 
-let canvas = document.getElementById("game")
+let canvas = document.getElementById("game");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let ctx = canvas.getContext('2d')
+let ctx = canvas.getContext('2d');
 
 function getMousePositionX(canvas, e) {
     let rect = canvas.getBoundingClientRect();
     let x = e.clientX - rect.left;
-
     return x;
 }
 
 function getMousePositionY(canvas, e) {
     let rect = canvas.getBoundingClientRect();
     let y = e.clientY - rect.left;
-
     return y;
 }
 
 function startMenu() {
-    ctx.fillStyle = 'green'
-    ctx.fillRect(0, 0, 2000, 2000)
+    ctx.fillStyle = 'green';
+    ctx.fillRect(0, 0, 2000, 2000);
 
     let buttonWidth = 500;
     let buttonHeight = 50;
@@ -50,6 +45,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'green';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     if (player) {
         player.move();
         player.draw(ctx);
@@ -58,6 +54,12 @@ function gameLoop() {
     if (bullets) {
         bullets.forEach(bullet => {
             bullet.update();
+        });
+    }
+
+    if (enemies) {
+        enemies.forEach(enemy => {
+            enemy.update();
         });
     }
 
@@ -86,11 +88,22 @@ let bullets = [];
 
 window.addEventListener("click", (e) => {
     let bulletX = player.x;
+    let bulletY = player.y;
     if (player.image.src.includes('PlayerFaceRight.png')) {
         bulletX += 75;
+        bulletY += 20;
     } else if (player.image.src.includes('PlayerFaceLeft.png')) {
         bulletX += 25;
+        bulletY += 20;
     }
-    bullets.push(new Bullet(bulletX, player.y + 20, getMousePositionX(canvas, e), getMousePositionY(canvas, e), 10, 200));
+
+    bullets.push(new Bullet(bulletX, bulletY + 20, getMousePositionX(canvas, e), getMousePositionY(canvas, e), 10, 200));
     console.log(bullets);
 });
+
+let enemies = [];
+setInterval(() => {
+    enemies.push(new Enemy(100, 100, 1, 'enemy1.png'));
+    console.log(enemies);
+}, 1000);
+

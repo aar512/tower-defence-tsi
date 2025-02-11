@@ -1,24 +1,44 @@
-import { player } from '../app.js';
+import { player, ctx } from '../app.js';
 
 export default class Enemy {
-    constructor(x, y, speed) {
+    constructor(x, y, speed, img) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.image = new Image();
-        this.image.src = img;
+        this.img = new Image();
+        this.img.src = img;
         this.updateDirection();
     }
 
     updateDirection() {
         if (player) {
-            this.directionx = player.x - this.x;
-            this.directiony = player.y - this.y;
+            this.directionX = player.x - this.x;
+            this.directionY = player.y - this.y;
+
+            let length = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
+            this.directionX /= length;
+            this.directionY /= length;
+
+            this.angle = Math.atan2(this.directionY, this.directionX);
         }
     }
 
     move() {
-        this.x += this.directionx * this.speed;
-        this.y += this.directiony * this.speed;
+        this.x += this.directionX * this.speed;
+        this.y += this.directionY * this.speed;
+    }
+
+    update() {
+        this.updateDirection();
+        this.move();
+        this.draw();
+    }
+
+    draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2, 100, 60);
+        ctx.restore();
     }
 }

@@ -1,4 +1,4 @@
-import { ctx } from '../app.js';
+import { ctx, bullets } from '../app.js';
 
 export default class Bullet {
     constructor(x, y, directionX, directionY, speed, range) {
@@ -13,11 +13,17 @@ export default class Bullet {
         const length = Math.sqrt(this.directionX ** 2 + this.directionY ** 2); //copilot
         this.directionX /= length; //copilot
         this.directionY /= length; //copilot
+
+        this.angle = Math.atan2(directionY - y, directionX - x);
     }
 
     draw() {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, 10, 10);
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(-5, -5, 10, 10);
+        ctx.restore();
     }
 
     update() {
@@ -27,6 +33,9 @@ export default class Bullet {
 
         if (this.distanceTraveled < this.range) {
             this.draw();
+        }
+        if (this.distanceTraveled > this.range) {
+            bullets.shift();
         }
     }
 }
