@@ -2,10 +2,10 @@ import Player from './classes/player.js';
 import Button from './classes/oneTimeUseButton.js';
 import Enemy from './classes/enemy.js';
 import Bullet from './classes/bullet.js';
+import TurretMenu from './classes/turretMenu.js';
 export { keysPressed, ctx, canvas, player, bullets };
 
 let player;
-let keysPressed = [];
 
 let canvas = document.getElementById("game");
 canvas.width = window.innerWidth;
@@ -25,6 +25,14 @@ function getMousePositionY(canvas, e) {
     return y;
 }
 
+let enemies = [];
+function startSpawningEnemies() {
+    setInterval(() => {
+        enemies.push(new Enemy(100, 100, 1, 'enemy1.png'));
+        console.log(enemies);
+    }, 1000);
+}
+
 function startMenu() {
     ctx.fillStyle = 'green';
     ctx.fillRect(0, 0, 2000, 2000);
@@ -38,6 +46,7 @@ function startMenu() {
     startButton.addClickListener(() => {
         player = new Player(canvas.width / 2, canvas.height / 2, 'PlayerFaceLeft.png');
         gameLoop();
+        //startSpawningEnemies();
     });
 }
 
@@ -68,6 +77,7 @@ function gameLoop() {
 
 startMenu();
 
+let keysPressed = [];
 window.addEventListener("keydown", (e) => {
     keysPressed[e.key] = true;
 
@@ -100,10 +110,3 @@ window.addEventListener("click", (e) => {
     bullets.push(new Bullet(bulletX, bulletY + 20, getMousePositionX(canvas, e), getMousePositionY(canvas, e), 10, 200));
     console.log(bullets);
 });
-
-let enemies = [];
-setInterval(() => {
-    enemies.push(new Enemy(100, 100, 1, 'enemy1.png'));
-    console.log(enemies);
-}, 1000);
-

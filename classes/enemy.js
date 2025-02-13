@@ -18,8 +18,6 @@ export default class Enemy {
             let length = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
             this.directionX /= length;
             this.directionY /= length;
-
-            this.angle = Math.atan2(this.directionY, this.directionX);
         }
     }
 
@@ -37,7 +35,6 @@ export default class Enemy {
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
         ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2, 100, 60);
         ctx.restore();
     }
